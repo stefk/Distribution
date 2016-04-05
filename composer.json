@@ -78,6 +78,12 @@
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
         "innova/angular-ui-tinymce-bundle": "5.*"
     },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "^1.10",
+        "mikey179/vfsStream": "~1.5",
+        "phpunit/phpunit": "~4.6",
+        "mockery/mockery": "^0.9.4"
+    },
     "autoload": {
         "psr-4": {
       	    "Claroline\\CoreBundle\\": "main/core/",
