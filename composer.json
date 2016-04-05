@@ -79,10 +79,7 @@
         "innova/angular-ui-tinymce-bundle": "5.*"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "^1.10",
-        "mikey179/vfsStream": "~1.5",
-        "phpunit/phpunit": "~4.6",
-        "mockery/mockery": "^0.9.4"
+        "claroline/dev-bundle": "dev-monolith"
     },
     "autoload": {
         "psr-4": {
