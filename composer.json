@@ -1,6 +1,8 @@
 {
     "name": "claroline/distribution",
-    "replace": {"claroline/distribution-bundle": "self.version"},
+    "replace": {
+      "claroline/distribution-bundle": "self.version"
+    },
     "description": "Claroline distribution",
     "keywords": ["Claroline", "Distribution"],
     "homepage": "http://www.claroline.net",
