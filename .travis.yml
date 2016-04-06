@@ -13,6 +13,7 @@ mysql:
   encoding: utf8
 
 before_script:
+  - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - phpenv config-rm xdebug.ini
   - nvm install 5
   - cd ../..
@@ -22,7 +23,10 @@ before_script:
   - curl -O https://raw.githubusercontent.com/claroline/DevBundle/monolith/Resources/travis/pre-composer.php
   - php pre-composer.php claroline/distribution $TRAVIS_REPO_SLUG $TRAVIS_BRANCH
   - composer update --prefer-source
+  - npm install
+  - npm run bower
+  - composer build
   - php app/console doctrine:database:create --env=test
   - php app/console claroline:init_test_schema --env=test
 
-script: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/phpunit vendor/claroline/distribution
+script: SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit vendor/claroline/distribution
