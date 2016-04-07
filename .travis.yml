@@ -19,9 +19,12 @@ before_script:
   - cd ../..
   - curl -L https://github.com/claroline/Claroline/archive/monolithic-build.tar.gz | tar xzv
   - cd Claroline-monolithic-build
+  - mv ../../$TRAVIS_REPO_SLUG .
+  - rm -rf ./$TRAVIS_REPO_SLUG/.git
   - php scripts/configure.php --default
   - curl -O https://raw.githubusercontent.com/claroline/DevBundle/monolith/Resources/travis/pre-composer.php
-  - php pre-composer.php claroline/distribution $TRAVIS_REPO_SLUG $TRAVIS_BRANCH
+  - php pre-composer.php claroline/distribution ./$TRAVIS_REPO_SLUG
+  - composer self-update
   - composer update --prefer-source
   - npm install
   - npm run bower
