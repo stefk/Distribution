@@ -13,15 +13,34 @@ mysql:
   encoding: utf8
 
 before_script:
-  - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - phpenv config-rm xdebug.ini
-  - nvm install 5
+  # leave build/repo dir
   - cd ../..
+
+  # increase php memory size (required for composer)
+  - echo "memory_limit=3072M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
+  # disable xdebug
+  - phpenv config-rm xdebug.ini
+
+  # get node >=5.6
+  - git clone https://github.com/creationix/nvm.git /tmp/.nvm
+  - source /tmp/.nvm/nvm.sh
+  - nvm install 5
+  - nvm use --delete-prefix 5
+
+  # get and configure claroline platform
   - curl -L https://github.com/claroline/Claroline/archive/monolithic-build.tar.gz | tar xzv
   - cd Claroline-monolithic-build
   - php scripts/configure.php --default
+
+  # override platform composer.json with build/repo local reference
+  - mkdir -p travis/local/pkg && mv ../$TRAVIS_REPO_SLUG/* travis/local/pkg
+  - rm -rf travis/local/pkg/.git
   - curl -O https://raw.githubusercontent.com/claroline/DevBundle/monolith/Resources/travis/pre-composer.php
-  - php pre-composer.php claroline/distribution $TRAVIS_REPO_SLUG $TRAVIS_BRANCH
+  - php pre-composer.php claroline/distribution ./travis/local/pkg
+
+  # fetch dependencies and build
+  - composer self-update
   - composer update --prefer-source
   - npm install
   - npm run bower
