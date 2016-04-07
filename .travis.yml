@@ -29,4 +29,4 @@ before_script:
   - php app/console doctrine:database:create --env=test
   - php app/console claroline:init_test_schema --env=test
 
-script: SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit vendor/claroline/distribution
+script: SYMFONY_DEPRECATIONS_HELPER=weak bin/phpunit -c vendor/claroline/distribution
