@@ -72,7 +72,9 @@ script:
   - $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php
   # launch eslint on ES6 files
   - $ROOT/node_modules/.bin/eslint `cat git_diff_files.txt | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`
-  # launch the whole test suite
+  # launch js tests
+  - $ROOT/node_modules/.bin/karma start --single-run --browsers PhantomJS
+  # launch php tests
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit
 
 after_success:

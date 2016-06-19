@@ -6,25 +6,19 @@ const loggerMiddleware = createLogger()
 const thunkMiddleware = createThunkMiddleware()
 const creators = {}
 
-
-
-const handlers = {}
-
-
-
+/*
 const choiceHandler = {
-  name: "choice",
-  type: "application/x.choice+json",
+  name: 'choice',
+  type: 'application/x.choice+json',
   reducer: (state, action) => state
 }
-
 
 
 export function addQuestionHandler(handler) {
 
 }
 
-
+*/
 
 
 
@@ -50,7 +44,7 @@ addActionCreator('addStep', () => {
 })
 
 addActionCreator('removeStep', stepId => {
-  assert(stepId, "Step id is mandatory")
+  assert(stepId, 'Step id is mandatory')
 
   return {
     type: 'REMOVE_STEP',
@@ -63,16 +57,17 @@ addActionCreator('removeStep', stepId => {
 export function createStore(initialState) {
   const reducer = (state = initialState, action) => {
     switch (action.type) {
-      case 'ADD_STEP':
-        return [...state, { id: `tmp-${Date.now()}`, items: []}]
-      case 'REMOVE_STEP':
-        const step = state.find(step => step.id === action.stepId)
-        const index = state.indexOf(step)
-        return [...state.slice(0, index), ...state.slice(index + 1)]
-      case 'ADD_ITEM':
-        return [...state, { title: "New item!" }]
-      default:
-        return state
+    case 'ADD_STEP':
+      return [...state, { id: `tmp-${Date.now()}`, items: []}]
+    case 'REMOVE_STEP': {
+      const step = state.find(step => step.id === action.stepId)
+      const index = state.indexOf(step)
+      return [...state.slice(0, index), ...state.slice(index + 1)]
+    }
+    case 'ADD_ITEM':
+      return [...state, { title: 'New item!' }]
+    default:
+      return state
     }
   }
 

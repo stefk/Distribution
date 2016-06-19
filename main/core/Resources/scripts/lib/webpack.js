@@ -20,7 +20,6 @@ function configure(rootDir, packages, isWatchMode) {
   const packageNames = webpackPackages.map(def => def.name)
   const normalizedPackages = normalizeNames(webpackPackages)
   const entries = extractEntries(normalizedPackages)
-  const commons = extractCommons(normalizedPackages)
 
   // all entries are compiled in the web/dist directory
   const output = {
@@ -33,14 +32,11 @@ function configure(rootDir, packages, isWatchMode) {
   // instead of node_modules (which stores only dev dependencies)
   const root = path.resolve(rootDir, 'web', 'packages')
 
-  // in every environment, plugins are needed for things like bower
-  // modules support, bundle resolution, common chunks extraction, etc.
+  // plugins needed in every environment
   const plugins = [
     makeBundleResolverPlugin(rootDir),
     makeBowerPlugin(),
-    makeAssetsPlugin(),
-    makeBaseCommonsPlugin(),
-    ...makeBundleCommonsPlugins(commons)
+    makeAssetsPlugin()
   ]
 
   // prod build has additional constraints
@@ -54,7 +50,8 @@ function configure(rootDir, packages, isWatchMode) {
       makeDedupePlugin(),
       makeDefinePlugin(),
       makeNoErrorsPlugin(),
-      makeFailOnErrorPlugin()
+      makeFailOnErrorPlugin(),
+      makeCommonsPlugin()
     )
   }
 
@@ -74,12 +71,11 @@ function configure(rootDir, packages, isWatchMode) {
     plugins: plugins,
     module: { loaders: loaders },
     devServer: {
-      headers: { "Access-Control-Allow-Origin": "*" }
+      headers: { 'Access-Control-Allow-Origin': '*' }
     },
     _debug: {
       'Detected webpack configs': packageNames,
-      'Compiled entries': entries,
-      'Compiled common chunks': commons
+      'Compiled entries': entries
     }
   }
 }
@@ -123,16 +119,6 @@ function extractEntries(packages) {
 }
 
 /**
- * TODO: Implement this function
- *
- * Merges the "commons" sections of package configs.
- *
- */
-function extractCommons(packages) {
-  return []
-}
-
-/**
  * This plugin allows webpack to discover entry files of modules
  * stored in the bower web/packages directory by inspecting their
  * bower config (default is to look in package.json).
@@ -172,9 +158,9 @@ function makeBundleResolverPlugin(rootDir) {
 
 /**
  * This plugin builds a common file for the whole platform
- * (might not be necessary or require minChunks adjustments)
+ * (might require minChunks adjustments)
  */
-function makeBaseCommonsPlugin() {
+function makeCommonsPlugin() {
   return new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
     minChunks: 3
@@ -191,16 +177,6 @@ function makeAssetsPlugin() {
     fullPath: false,
     prettyPrint: true
   });
-}
-
-/**
- * These plugins build common files per bundle according to the
- * settings of webpack.commons coming from assets.json files.
- */
-function makeBundleCommonsPlugins(commons) {
-  return commons.map(config => {
-    return new webpack.optimize.CommonsChunkPlugin(config)
-  })
 }
 
 /**

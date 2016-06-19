@@ -5,12 +5,7 @@ import template from './item.component.html'
 angular
   .module('editor')
   .component('item', {
-    template: ['$element', '$attrs', function ($el, $attrs) {
-      console.log('el', $el)
-      console.log('attrs', $attrs)
-
-      return 'Dyn item tpl'
-    }],
+    template,
     controller,
     bindings: {
       data: '<'
